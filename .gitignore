@@ -10,3 +10,6 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# assets.go created by go-bindata-assetfs
+server/assets.go
