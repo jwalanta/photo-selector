@@ -32,3 +32,25 @@ html, body{
     z-index: 9;
     color: #ffffff;
 }
+
+#buckets{
+    float: left;
+    padding: 0 1em;
+}
+
+#buckets span{
+    padding: .25em .5em;
+    background-color: #ffffff;
+    margin: 0 .5em;
+    color: #000000;
+    border-radius: 1em;
+}
+
+#buckets span.selected{
+    background-color: #ff0000;
+}
+
+#info{
+    float:right;
+    padding: 0 1em;
+}
