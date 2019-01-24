@@ -54,3 +54,19 @@ html, body{
     float:right;
     padding: 0 1em;
 }
+
+.bucket{
+    cursor: pointer;
+}
+
+#selection {
+    background-color: #ffffff;
+    width: 600px;
+    height: 400px;
+    margin-left: calc(50vw - 300px);
+    margin-top: calc(50vh - 200px);
+    z-index: 999;
+    position: absolute;
+    display: none;
+
+}
