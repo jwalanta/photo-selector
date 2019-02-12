@@ -59,6 +59,20 @@ var updateBucketDisplay = function () {
     }
 }
 
+var displayBucket = function(n){
+
+    getID("dialog").innerHTML = buckets[n].join(" ");
+
+    // show
+    getID("selection").style.display = "block";
+}
+
+
+getID("selection").addEventListener("click", function(e){
+    if (e.target.id == "selection"){
+        getID("selection").style.display = "none";
+    }
+});
 
 var request = new XMLHttpRequest();
 request.open('GET', '/photos.json', true);
@@ -90,7 +104,7 @@ document.onkeyup = function (e) {
 var bucketStr = "";
 
 for (var i = 1; i <= 10; i++) {
-    bucketStr += "<span class='bucket' id='bucket" + (i % 10) + "' onclick='toggleBucket("+(i%10)+")'>" + (i % 10) + "</span>";
+    bucketStr += "<span class='bucket' id='bucket" + (i % 10) + "' onclick='displayBucket("+(i%10)+")'>" + (i % 10) + "</span>";
 }
 getID("buckets").innerHTML = bucketStr;
 
