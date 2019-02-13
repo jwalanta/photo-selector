@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"net/http"
@@ -10,12 +11,40 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/mitchellh/go-homedir"
 	"github.com/rwcarlsen/goexif/exif"
 )
 
 var photosFolder = "." // default to current folder
 var verbose = true
 var resizeFolder = ""
+
+var labelPath, _ = homedir.Expand("~/.phs.labels")
+
+var validExtensions = []string{"jpg", "cr2", "dng", "raw", "raf"}
+
+func isValidExtension(ext string) bool {
+
+	for _, e := range validExtensions {
+		if e == ext {
+			return true
+		}
+	}
+	return false
+
+}
+
+func labelsJSONHandler(w http.ResponseWriter, r *http.Request) {
+
+	if fileExists(labelPath) {
+		http.ServeFile(w, r, labelPath)
+	} else {
+		labels := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
+		labelsJSON, _ := json.Marshal(labels)
+		w.Write(labelsJSON)
+	}
+
+}
 
 func photosJSONHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -138,6 +167,9 @@ func Run() {
 
 	// generate json
 	http.HandleFunc("/photos.json", photosJSONHandler)
+
+	// labels json
+	http.HandleFunc("/labels.json", labelsJSONHandler)
 
 	fmt.Println("Running server at http://localhost:" + strconv.Itoa(*portPtr))
 

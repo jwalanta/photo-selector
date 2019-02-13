@@ -1,6 +1,7 @@
 var photos = [];
 var pos = 0;
 var buckets = [[],[],[],[],[],[],[],[],[],[]];
+var bucketLabels = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 var mod = function (n, m) {
     return ((n % m) + m) % m;
@@ -14,6 +15,17 @@ var updateFooter = function () {
     getID('info').innerHTML = photos[pos] + " [" + (pos + 1) + "/" + photos.length + "]";
 }
 
+var renderBucket = function(){
+    var bucketStr = "";
+    for (var i = 1; i <= 10; i++) {
+        var n = i % 10
+        bucketStr += "<span class='bucket' id='bucket" + n + "' onclick='displayBucket(" + n + ")'>";
+        bucketStr += bucketLabels[n] == n ? n : n + ": " + bucketLabels[n];
+        bucketStr += "</span>";
+    }
+    getID("buckets").innerHTML = bucketStr;
+    updateBucketDisplay();
+}
 
 var displayPhoto = function () {
     getID("photo").src = "t/" + photos[pos];
@@ -74,15 +86,17 @@ getID("selection").addEventListener("click", function(e){
     }
 });
 
-var request = new XMLHttpRequest();
-request.open('GET', '/photos.json', true);
-request.onload = function () {
-    if (request.status >= 200 && request.status < 400) {
-        photos = JSON.parse(request.responseText);
-        displayHiResPhoto();
-    }
-};
-request.send();
+(function(){
+    var request = new XMLHttpRequest();
+    request.open('GET', '/photos.json', true);
+    request.onload = function () {
+        if (request.status >= 200 && request.status < 400) {
+            photos = JSON.parse(request.responseText);
+            displayHiResPhoto();
+        }
+    };
+    request.send();
+})();
 
 document.onkeydown = function (e) {
     if (e.keyCode == 37) { // left
@@ -99,12 +113,18 @@ document.onkeydown = function (e) {
 
 document.onkeyup = function (e) {
     displayHiResPhoto()
-}
+};
 
-var bucketStr = "";
+(function(){
+    var request = new XMLHttpRequest();
+    request.open('GET', '/labels.json', true);
+    request.onload = function () {
+        if (request.status >= 200 && request.status < 400) {
+            bucketLabels = JSON.parse(request.responseText);
+        }
+        renderBucket()
+    };
+    request.send();
+})();
 
-for (var i = 1; i <= 10; i++) {
-    bucketStr += "<span class='bucket' id='bucket" + (i % 10) + "' onclick='displayBucket("+(i%10)+")'>" + (i % 10) + "</span>";
-}
-getID("buckets").innerHTML = bucketStr;
 
