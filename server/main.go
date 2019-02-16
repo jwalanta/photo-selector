@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -125,6 +126,28 @@ func photoHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func selectionsJSONHandler(w http.ResponseWriter, r *http.Request) {
+
+	selectionFile := photosFolder + "/.phs.selection"
+
+	if r.Method == "GET" {
+		if fileExists(selectionFile) {
+			http.ServeFile(w, r, selectionFile)
+		} else {
+			http.Error(w, "404", http.StatusNotFound)
+		}
+	}
+
+	if r.Method == "POST" {
+		body, _ := ioutil.ReadAll(r.Body)
+		err := ioutil.WriteFile(selectionFile, body, 0644)
+		if err != nil {
+			http.Error(w, "Error saving", http.StatusInternalServerError)
+		}
+	}
+
+}
+
 // Run -- Start the web server
 func Run() {
 
@@ -170,6 +193,9 @@ func Run() {
 
 	// labels json
 	http.HandleFunc("/labels.json", labelsJSONHandler)
+
+	// selections json
+	http.HandleFunc("/selections.json", selectionsJSONHandler)
 
 	fmt.Println("Running server at http://localhost:" + strconv.Itoa(*portPtr))
 

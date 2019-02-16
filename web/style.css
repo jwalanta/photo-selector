@@ -38,7 +38,7 @@ html, body{
     padding: 0 1em;
 }
 
-#buckets span{
+#buckets span, #save span{
     padding: .25em .6em;
     background-color: #ffffff;
     margin: 0 .5em;
@@ -50,6 +50,28 @@ html, body{
     background-color: #ff0000;
 }
 
+#save{
+    float:right;
+}
+
+#save span{
+    cursor: pointer;
+}
+
+#save span:hover{
+    background-color: #dadada;
+}
+
+.state-success{
+    background-color: green !important;
+    color: #ffffff;
+}
+
+.state-error{
+    background-color: red !important;
+    color: #ffffff;
+}
+
 #info{
     float:right;
     padding: 0 1em;
@@ -59,7 +81,7 @@ html, body{
     cursor: pointer;
 }
 
-#selection{
+#dialogbg{
     position: absolute;
     top: 0px;
     left: 0px;

@@ -76,13 +76,13 @@ var displayBucket = function(n){
     getID("dialog").innerHTML = buckets[n].join(" ");
 
     // show
-    getID("selection").style.display = "block";
+    getID("dialogbg").style.display = "block";
 }
 
 
-getID("selection").addEventListener("click", function(e){
-    if (e.target.id == "selection"){
-        getID("selection").style.display = "none";
+getID("dialogbg").addEventListener("click", function(e){
+    if (e.target.id == "dialogbg"){
+        getID("dialogbg").style.display = "none";
     }
 });
 
@@ -127,4 +127,33 @@ document.onkeyup = function (e) {
     request.send();
 })();
 
+(function(){
+    var request = new XMLHttpRequest();
+    request.open('GET', '/selections.json', true);
+    request.onload = function () {
+        if (request.status >= 200 && request.status < 400) {
+            buckets = JSON.parse(request.responseText);
+        }
+        renderBucket()
+    };
+    request.send();
+})();
 
+
+var saveBuckets = function(){
+    var request = new XMLHttpRequest();
+    request.open('POST', '/selections.json', true);
+    request.setRequestHeader("Content-Type", "application/json");
+    // request.onload = function () {
+    //     var s = getID("save-btn");
+    //     if (request.status == 200) {
+    //         s.classList.add("state-success");
+    //     }
+    //     else{
+    //         s.classList.add("state-error");
+    //     }
+    // };
+    
+    var data = JSON.stringify(buckets);
+    request.send(data);
+}
